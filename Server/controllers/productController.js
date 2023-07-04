@@ -130,25 +130,48 @@ export const productPhotoController = async (req, res) => {
   }
 };
 
-//Delete Product
+// Delete Product
 
 export const deleteProductControlller = async (req, res) => {
   try {
     await productModel.findByIdAndDelete(req.params.pid).select("-photo");
-
     res.status(200).send({
       success: true,
-      message: "Product Delete Successfully",
+      message: "Product Deleted successfully",
     });
   } catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error in Deleting Product",
+      message: "Error while deleting product",
       error,
     });
   }
 };
+
+// export const deleteProductControlller = async (req, res) => {
+//   try {
+//     const product = await productModel.findByIdAndDelete(req.params.pid);
+//     if (!product) {
+//       return res.status(404).send({
+//         success: false,
+//         message: "Product not found",
+//       });
+//     }
+//     res.status(200).send({
+//       success: true,
+//       message: "Product deleted successfully",
+//       product,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       success: false,
+//       error,
+//       message: "Error in deleting the product",
+//     });
+//   }
+// };
 
 //Update Product
 export const updateProductController = async (req, res) => {
