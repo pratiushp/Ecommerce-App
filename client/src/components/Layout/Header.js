@@ -4,6 +4,7 @@ import { AiOutlineShop } from "react-icons/ai";
 import { useAuth } from "../../context/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import SearchInput from "../Form/SearchInput";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,13 +37,13 @@ const Header = () => {
     <nav className="bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex space-x-72 items-center">
+          <div className="flex space-x-48 items-center">
             <div className="space-x-3 flex flex-shrink-0">
               <AiOutlineShop className=" text-white text-xl mt-[2px]" />
               <span className="text-white font-semibold">Ecommerce</span>
             </div>
             <div className="hidden md:block">
-              <div className=" ml-10 flex items-baseline space-x-4">
+              <div className="  flex items-baseline space-x-6">
                 <NavLink
                   to="/"
                   // activeClassName="text-white bg-gray-900"
@@ -78,6 +79,7 @@ const Header = () => {
                 >
                   Cart [0]
                 </NavLink>
+                <SearchInput className="" />
               </div>
             </div>
           </div>

@@ -49,6 +49,7 @@ const Product = () => {
                   <div className="text-center">
                     <h5 className="font-semibold">{p.name}</h5>
                     <p className="text-sm">{p.description}</p>
+                    <p className="text-sm">{p.price}</p>
                   </div>
                 </Link>
               ))}
