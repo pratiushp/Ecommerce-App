@@ -1,4 +1,5 @@
 import { comparePassword, hashPassword } from "../helpers/authHelper.js";
+import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
 
@@ -172,5 +173,63 @@ export const testController = () => {
   } catch (error) {
     console.log(error);
     res.send(error);
+  }
+};
+
+//Update Prodile
+export const updateProfileController = async (req, res) => {
+  try {
+    const { name, phone, address, email, password } = req.body;
+    const user = await userModel.findById(req.user._id);
+    //password
+    if (password && password.length < 6) {
+      return res.json({
+        error: "Password is required and must be more than 6 character",
+      });
+    }
+
+    const hashedPassword = password ? await hashPassword(password) : undefined;
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      req.user._id,
+      {
+        name: name || user.name,
+        phone: phone || user.phone,
+        address: address || user.address,
+        email: email || user.email,
+        password: hashedPassword || user.password,
+      },
+      { new: true }
+    );
+    res.status(200).send({
+      success: true,
+      message: "Profile Updated Successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error in Updating Profile",
+      error,
+    });
+  }
+};
+
+//Order get
+export const getOrderController = async (req, res) => {
+  try {
+    const orders = await orderModel
+      .find({ buyer: req.user._id })
+      .populate("products", "-photo")
+      .populate("buyer", "name");
+    res.json(orders);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({
+      success: false,
+      message: "Error in Getting orders",
+      error,
+    });
   }
 };

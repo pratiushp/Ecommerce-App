@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Checkbox, Radio } from "antd";
+import { Radio } from "antd";
 import { Prices } from "../components/Prices";
-import { NavLink } from "react-router-dom";
+import { useCart } from "../context/cart";
+import { toast } from "react-toastify";
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);
@@ -14,6 +15,7 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [cart, setCart] = useCart();
   const navigate = useNavigate();
 
   // Get all Category
@@ -51,29 +53,11 @@ const HomePage = () => {
   const getTotal = async () => {
     try {
       const { data } = await axios.get("/api/v1/product/product-count");
-
       setTotal(data?.total);
     } catch (error) {
       console.log(error);
     }
   };
-
-  // useEffect(() => {
-  //   if (page === 1) return;
-  //   loadMore();
-  // }, [page]);
-  // //load more
-  // const loadMore = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await axios.get(`/api/v1/product/product-list/${page}`);
-  //     setLoading(false);
-  //     setProducts([...products, ...data?.products]);
-  //   } catch (error) {
-  //     console.log(error);
-  //     setLoading(false);
-  //   }
-  // };
 
   //Filter
   const handleFilter = (value, id) => {
@@ -109,10 +93,9 @@ const HomePage = () => {
 
   return (
     <Layout title={"All Product - Best offers"}>
-      <div className="flex pt-5">
-        <div className="w-1/5 m-2">
-          <h1 className="text-center font-sans font-semibold text-xl ">
-            {" "}
+      <div className="flex flex-col lg:flex-row pt-5">
+        <div className="w-full lg:w-1/4 m-2">
+          <h1 className="text-center font-sans font-semibold text-xl">
             Filter by category
           </h1>
           <div className="flex flex-col">
@@ -158,9 +141,9 @@ const HomePage = () => {
             </button>
           </div>
         </div>
-        <div className="w-3/4">
+        <div className="w-full lg:w-3/4">
           <h1 className="text-center font-bold text-3xl">All Product</h1>
-          <div className="grid grid-cols-3 gap-4 mt-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-8">
             {products?.map((p) => (
               <div
                 className="border p-4 flex flex-col items-center"
@@ -174,7 +157,7 @@ const HomePage = () => {
                 <div className="text-center">
                   <h5 className="font-semibold">{p.name}</h5>
                   <p className="text-sm">{p.description.substring(0, 40)}</p>
-                  <p className="text-sm "> $ {p.price}</p>
+                  <p className="text-sm"> $ {p.price}</p>
                   <div className="flex gap-4">
                     <button
                       onClick={() => navigate(`/product/${p.slug}`)}
@@ -182,7 +165,17 @@ const HomePage = () => {
                     >
                       See Details
                     </button>
-                    <button className="bg-gray-500 text-sm  hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded">
+                    <button
+                      onClick={() => {
+                        setCart([...cart, p]);
+                        localStorage.setItem(
+                          "cart",
+                          JSON.stringify([...cart, p ])
+                        );
+                        toast.success("Item Added in the Cart");
+                      }}
+                      className="bg-gray-500 text-sm  hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded"
+                    >
                       Add to cart
                     </button>
                   </div>
@@ -190,7 +183,7 @@ const HomePage = () => {
               </div>
             ))}
           </div>
-          <div className="mt-3 m- 3 p-3">
+          <div className="mt-3 m-3 p-3">
             {products && products.length < total && (
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-sm text-white font-semibold py-2 px-4 rounded"
@@ -199,8 +192,7 @@ const HomePage = () => {
                   setPage(page + 1);
                 }}
               >
-                {" "}
-                {loading ? "loading..." : "Load More"}{" "}
+                {loading ? "loading..." : "Load More"}
               </button>
             )}
           </div>

@@ -5,11 +5,14 @@ import { useAuth } from "../../context/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import SearchInput from "../Form/SearchInput";
+import { useCart } from "../../context/cart";
+import { Badge } from "antd";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const [cart] = useCart();
   const [auth, setAuth] = useAuth();
+
   const navigate = useNavigate();
   const handleLogout = () => {
     setAuth({
@@ -51,35 +54,17 @@ const Header = () => {
                 >
                   Home
                 </NavLink>
-                <NavLink
-                  to="/about"
-                  // activeClassName="text-white bg-gray-900"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  About
-                </NavLink>
-                <NavLink
-                  to="/contact"
-                  // activeClassName="text-white bg-gray-900"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Contact
-                </NavLink>
-                <NavLink
-                  to="/policy"
-                  // activeClassName="text-white bg-gray-900"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Policy
-                </NavLink>
-                <NavLink
-                  to="/cart"
-                  // activeClassName="text-white bg-gray-900"
-                  className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Cart [0]
-                </NavLink>
-                <SearchInput className="" />
+
+                <Badge count={cart?.length}>
+                  <NavLink
+                    to="/cart"
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Cart
+                  </NavLink>
+                </Badge>
+
+                <SearchInput  />
               </div>
             </div>
           </div>
@@ -211,41 +196,22 @@ const Header = () => {
       <div className={`${isMenuOpen ? "block" : "hidden"} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           <NavLink
-            // exact
             to="/"
-            // activeClassName="text-white bg-gray-900"
             className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
           >
             Home
           </NavLink>
-          <NavLink
-            to="/about"
-            // activeClassName="text-white bg-gray-900"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="/contact"
-            // activeClassName="text-white bg-gray-900"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Contact
-          </NavLink>
-          <NavLink
-            to="/policy"
-            // activeClassName="text-white bg-gray-900"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Policy
-          </NavLink>
-          <NavLink
-            to="/cart"
-            // activeClassName="text-white bg-gray-900"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Cart [0]
-          </NavLink>
+
+          <Badge count={cart?.length}>
+            <NavLink
+              to="/cart"
+              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+            >
+              Cart
+            </NavLink>
+          </Badge>
+
+          <SearchInput />
         </div>
         {!auth.user ? (
           <>
