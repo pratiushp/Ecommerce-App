@@ -98,12 +98,12 @@ const HomePage = () => {
           <h1 className="text-center font-sans font-semibold text-xl">
             Filter by category
           </h1>
-          <div className="flex flex-col">
+          <div className="flex flex-col ">
             {categories?.map((c) => (
-              <label key={c._id} className="flex items-center space-x-2 mb-2">
+              <label key={c._id} className="flex items-center space-x-2   mb-4">
                 <input
                   type="checkbox"
-                  className="form-checkbox text-blue-500"
+                  className="form-checkbox text-blue-500 "
                   onChange={(e) => handleFilter(e.target.checked, c._id)}
                 />
                 <span className="text-gray-700">{c.name}</span>
@@ -146,11 +146,11 @@ const HomePage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-8">
             {products?.map((p) => (
               <div
-                className="border p-4 flex flex-col items-center"
+                className="border  flex flex-col items-center"
                 key={p._id}
               >
                 <img
-                  className="w-32 h-32 object-cover mb-4"
+                  className="w-[50%] h-[50%] object-cover mb-4"
                   src={`/api/v1/product/product-photo/${p._id}`}
                   alt={p.name}
                 />
